@@ -1,12 +1,12 @@
-\usepackage[utf8]{inputenc} %codifica il documento con UTF8
-\usepackage[italian]{babel}
-\usepackage{amsmath} %Arricchisce la scelta nel comporre le formule.
-\usepackage{amssymb} %idem
-\usepackage{graphicx} %facilita la gestione delle figure
-\usepackage{amsfonts}
+%!TEX root = Tesi.tex
 
-\begin{document}
+\section{Bluetooth Low Energy}
+\subsection{Introduzione}
+Il Bluetooth Low Energy (BLE) è una tecnologia wireless introdotta nello standard 4.0, disegnata e commercializzata dal SIG\footnote{Bluetooth Special Interest Group: organizzazione che regolamenta e definisce gli standard  per la trasmissione dati tramite la tecnologia Bluetooth.}; ideata per trasmissioni di dati di breve dimensione, essa si differenzia dal Bluetooth classico per un inferiore consumo di energia, mantenendo la stessa portata trasmissiva.
 
+\subsection{Banda Trasmissiva}
+BLE opera alla stessa banda di frequenza del bluetooth classico, 2.400 - 2.4835 GHz, ma utilizza un numero inferiore di canali, 40 canali da 2 MHz l'uno.
+Nel canale trasmissivo i dati sono trasmessi con una modulazione GFSK.\footnote{Gaussin Frequency Shift Keying, limita la larghezza dello spettro trasmissivo tramite un filtro di tipo Gaussiano.}
+I bitrate trasmissivi sono limitati ai valori 125 kbit/s, 1 Mbit/s o 2 Mbit/s 
+Bluetooth Low Energy utilizza il \emph{Frequency Hopping}, una tecnica trasmissiva che consiste nel cambiare canale trasmissivo per ogni pacchetto inviato durante una trasmissione; l'utilizzo di questa tecnica permette di ridurre i problemi di interferenza con gli altri canali ed allo stesso tempo di aumentare la sicurezza delle trasmissioni.
 
-
-\end{document}

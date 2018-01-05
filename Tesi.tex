@@ -1,4 +1,6 @@
-\documentclass[10pt,a4paper,italian]{book} %classe book, A4 con pt 10
+%!TEX TS-program = pdflatex
+
+\documentclass[10pt,a4paper,italian]{article} %classe book, A4 con pt 10
 
 \usepackage[utf8]{inputenc} %codifica il documento con UTF8
 \usepackage[italian]{babel}
@@ -13,11 +15,18 @@
 \title{dunno}
 \date{14/02/2018}
 
+
+
+
 \begin{document}
 
-\tableofcontents
+\maketitle %stampo il titolo
 
-\maketitle
-\include{capitolo1.tex} 
+
+\tableofcontents %stampo l'indice
+
+
+\include{capitolo1} 
+
 
 \end{document}\grid
