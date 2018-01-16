@@ -5,7 +5,7 @@
 Il Bluetooth Low Energy (BLE) è una tecnologia wireless introdotta nello standard 4.0, disegnata e commercializzata dal SIG\footnote{Bluetooth Special Interest Group: organizzazione che regolamenta e definisce gli standard  per la trasmissione dati tramite la tecnologia Bluetooth.}; ideata per trasmissioni di dati di breve dimensione, essa si differenzia dal Bluetooth classico per un inferiore consumo di energia, mantenendo la stessa portata trasmissiva.
 
 \subsection{Banda Trasmissiva}
-BLE opera alla stessa banda di frequenza del bluetooth classico, 2.400 - 2.4835 GHz, ma utilizza un numero inferiore di canali, 40 canali da 2 MHz l'uno.
+BLE opera alla stessa banda di frequenza del bluetooth classico, 2,400 - 2,4835 GHz, ma utilizza un numero inferiore di canali, 40 canali da 2 MHz l'uno.
 Nel canale trasmissivo i dati sono trasmessi con una modulazione GFSK.\footnote{Gaussin Frequency Shift Keying, limita la larghezza dello spettro trasmissivo tramite un filtro di tipo Gaussiano.}
 I bitrate trasmissivi sono limitati ai valori 125 kbit/s, 1 Mbit/s o 2 Mbit/s.
 
@@ -21,12 +21,26 @@ Se i due componenti sono montati su uno stesso chip, come nel caso dei SoC\footn
 \includegraphics[scale=0.5]{stack_ble.png}
 
 \begin{itemize}
-\item Physical Layer (PHY): è il livello fisico, ovvero l'etere; lavora nella banda di frequenza 2.4 GHz ISM\footnote{Industrial, Scientific and Medical: frequenze riservate alle applicazioni di radiocomunicazioni non commerciali, ovvero per uso industriale, scientifico e medico.} Si compone di 40 canali da 2 MHz ognuno suddivisi in 3 per advertising e 37 per lo scambio dati.
+\item Physical Layer (PHY): è il livello fisico, ovvero l'etere; lavora nella banda di frequenza 2,4 GHz ISM\footnote{Industrial, Scientific and Medical: frequenze riservate alle applicazioni di radiocomunicazioni non commerciali, ovvero per uso industriale, scientifico e medico.} Si compone di 40 canali da 2 MHz ognuno suddivisi in 3 per advertising e 37 per lo scambio dati.
 
 \item Link Layer (LL): si occupa della gestione della sequenza e della temporizzazione dei pacchetti scambiati. Dialoga con i nodi vicini e scambia informazioni quali i parametri di connessione e controllo di flusso.\linebreak 
 \'E una macchina a stati che si compone di 5 stati: Standby, Advertising, Scanning, Initiating, Connection. 
 
 \includegraphics[scale=0.5]{LL_states}
+
+\begin{itemize}
+
+\item Advertising: il dispositivo rende noto agli ascoltatori della propria presenza, indicando la disponibilità ad una connessione ed inviando alcune informazioni utili.
+
+\item Scanning: il dispositivo è in ascolto di tutte le informazioni trasmesse sui canali di advertise.
+
+\item Initiating: un dispositivo in ascolto individua un Advertise di suo interesse ed indica la sua volontà di connettersi.
+
+\item Connection: due o più dispositivi sono connessi.
+
+\item Standby: il dispositivo è in uno stato di attesa caratterizzato da un basso consumo energetico.
+
+\end{itemize}
 
 Lo stato di Scanning può essere attivo (richiede informazioni aggiuntive) o passivo; Lo stato Connection anch'esso si divide in 2 sottostati: Central e Peripheral.
 
@@ -36,7 +50,19 @@ Lo stato di Scanning può essere attivo (richiede informazioni aggiuntive) o pas
 
 \item Attribute Protocol (ATT): gestisce la distribuzione delle informazioni riguardanti le coppie attributo-valore presenti in un device peripheral (Server)
 
-\item Generic Access Profile (GAP): 
+\item Generic Access Profile (GAP): controlla \emph{advertising} e \emph{connection} . Divide i dispositivi bluetooth low energy in:
+\begin{itemize}
+\item Peripheral: normalmente dispositivi dotati di una limitata capacità di calcolo, come ad esempio un sensore di temperatura.
+\item Central: dispositivo che gestisce la rete bluetooth e che richiede una maggiore capacità di calcolo; mentre un dispositivo periferico può avere una connessione con un solo dispositivo centrale, un centrale può gestire più dispositivi periferici andando a creare una Piconet\footnote{Rete Bluetooth composta da massimo otto dispositivi in relazione master-slave e fino a 255 dispositivi in modalità inattiva o parcheggio.}
+\end{itemize} 
+
+\item Generic Attribute Profile (GATT): entra in gioco a connessione avvenuta, definisce il modo in cui 2 dispositivi BLE scambiano dati utilizzando i concetti di \emph{Services} e \emph{Characteristics}.
+
+\begin{itemize}
+\item GATT server: è un peripheral device, che tramite il protocollo ATT permette al central di conoscere i dati che ha memorizzato in strutture di tipo service-characteristic.
+\item GATT client: è il central device, che gestisce le comunicazioni e che richiede ai server periferici i dati raccolti.
+\end{itemize}
+
 \end{itemize}
 
 
