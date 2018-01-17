@@ -9,6 +9,31 @@ BLE opera alla stessa banda di frequenza del bluetooth classico, 2,400 - 2,4835 
 Nel canale trasmissivo i dati sono trasmessi con una modulazione GFSK.\footnote{Gaussin Frequency Shift Keying, limita la larghezza dello spettro trasmissivo tramite un filtro di tipo Gaussiano.}
 I bitrate trasmissivi sono limitati ai valori 125 kbit/s, 1 Mbit/s o 2 Mbit/s.
 
+\subsubsection{Mapping tra canali e frequenze}
+Il protocollo BLE utilizza 40 canali fisici differenti per la trasmissione, con una numerazione che va da 0 a 39. Ogni canale ha una frequenza centrata in $2402 + (k * 2)$ MHz, dove k assume il valore del canale considerato.
+Questi 40 canali si dividono in:
+\begin{itemize}
+\item 3 canali 0, 12 e 39 centrati nelle frequenze 2402 MHz, 2426 MHz e 2480 MHz ed utilizzati per l'Advertise. La distribuzione di questi canali non è casuale: essi difatti sono i canali utilizzati da un dispositivo per far conoscere la propria presenza ai vicini, è quindi fondamentale che almeno uno di essi sia disponibile per la trasmissione, quindi privo di disturbi generati da altri sistemi che operano nella stessa banda trasmissiva. Sono stati distribuiti lontani tra di loro cercando di utilizzare tutta la banda disponibile per massimizzare la possibilità di avere un canale libero per la trasmissione. Un altro motivo della scelta è stato quello di poter facilitare la co-esistenza con la tecnologia Wifi, che utilizza la stessa banda per trasmettere, centrata principalmente nei canali Wifi 1, 6 e 11.
+\item i 37 canali restanti sono utilizzati per la trasmissione di dati che vengono utilizzati solo a connessione avvenuta per lo scambio di informazioni.
+\end{itemize} 
+
+
+Per una miglior leggibilità ed un più facile utilizzo, si è scelto di mappare i canali reali con dei corrispondenti indici fittizi che vedono nelle numerazioni da 0 a 36 i canali data e 37, 38, 39 per i canali di Advertise;
+\begin{itemize}
+\item[-] canale fisico 0, di Advertise a frequenza 2402 MHz, mappato come canale 37.
+\item[-] canale fisico 12, di Advertise a frequenza 2426 MHz, mappato come canale 38.
+\item[-] canale fisico 39, di Advertise a frequenza 2480 MHz, mappato come canale 39. 
+\item[-] canale fisico 1, di scambio dati a frequenza 2404 MHz, mappato come canale 0.
+\item[-] \dots
+\item[-] canale fisico 38, di scambio dati a frequenza 2478 MHz, mappato come canale 36.
+\end{itemize}
+
+% figura canali
+
+% figura canali con i 3 wifi
+
+
+
 Bluetooth Low Energy utilizza il \emph{Frequency Hopping}, una tecnica trasmissiva che consiste nel cambiare canale trasmissivo per ogni pacchetto inviato durante una trasmissione; l'utilizzo di questa tecnica permette di ridurre i problemi di interferenza con gli altri canali ed allo stesso tempo di aumentare la sicurezza delle trasmissioni.
 
 \subsection{Stack protocollare}
@@ -62,8 +87,6 @@ Lo stato di Scanning può essere attivo (richiede informazioni aggiuntive) o pas
 \item GATT server: è un peripheral device, che tramite il protocollo ATT permette al central di conoscere i dati che ha memorizzato in strutture di tipo service-characteristic.
 \item GATT client: è il central device, che gestisce le comunicazioni e che richiede ai server periferici i dati raccolti.
 \end{itemize}
-
-
 
 \end{itemize}
 
