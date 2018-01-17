@@ -14,6 +14,13 @@ Il protocollo BLE utilizza 40 canali fisici differenti per la trasmissione, con 
 Questi 40 canali si dividono in:
 \begin{itemize}
 \item 3 canali 0, 12 e 39 centrati nelle frequenze 2402 MHz, 2426 MHz e 2480 MHz ed utilizzati per l'Advertise. La distribuzione di questi canali non è casuale: essi difatti sono i canali utilizzati da un dispositivo per far conoscere la propria presenza ai vicini, è quindi fondamentale che almeno uno di essi sia disponibile per la trasmissione, quindi privo di disturbi generati da altri sistemi che operano nella stessa banda trasmissiva. Sono stati distribuiti lontani tra di loro cercando di utilizzare tutta la banda disponibile per massimizzare la possibilità di avere un canale libero per la trasmissione. Un altro motivo della scelta è stato quello di poter facilitare la co-esistenza con la tecnologia Wifi, che utilizza la stessa banda per trasmettere, centrata principalmente nei canali Wifi 1, 6 e 11.
+
+\begin{figure}[H]
+\includegraphics[width=300pt]{channel_mapping_wifi}
+\centering
+\caption{sovrapposizione alla banda BLE dei 3 canali usati principalmente nella comunicazione wifi; si noti come i 3 canali di advertise non rientrino in nessuno di questi 3 canali.}
+\end{figure}
+
 \item i 37 canali restanti sono utilizzati per la trasmissione di dati che vengono utilizzati solo a connessione avvenuta per lo scambio di informazioni.
 \end{itemize} 
 
@@ -28,13 +35,27 @@ Per una miglior leggibilità ed un più facile utilizzo, si è scelto di mappare
 \item[-] canale fisico 38, di scambio dati a frequenza 2478 MHz, mappato come canale 36.
 \end{itemize}
 
-% figura canali
+\begin{figure}[H]
+\caption{Distribuzione dei canali nella banda trasmissiva BLE, con il riferimento all'indice del canale mappato e la relativa frequenza centrale.}
+\includegraphics[width=350pt]{channel_mapping}
+\centering
+\label{channel_mapping}
+\end{figure}
 
-% figura canali con i 3 wifi
 
 
 
-Bluetooth Low Energy utilizza il \emph{Frequency Hopping}, una tecnica trasmissiva che consiste nel cambiare canale trasmissivo per ogni pacchetto inviato durante una trasmissione; l'utilizzo di questa tecnica permette di ridurre i problemi di interferenza con gli altri canali ed allo stesso tempo di aumentare la sicurezza delle trasmissioni.
+\subsubsection{Adaptive Frequency Hopping}
+Bluetooth Low Energy utilizza il \emph{Frequency Hopping}, una tecnica trasmissiva che consiste nel cambiare canale trasmissivo per ogni pacchetto inviato durante una trasmissione; l'utilizzo di questa tecnica permette di ridurre i problemi di interferenza con gli altri canali ed allo stesso tempo di aumentare la sicurezza delle trasmissioni. Esso è definito adattivo perché permette, in fase di connessione, di andare ad escludere determinati canali perché considerati troppo disturbati. L'algoritmo che regola questo cambio di canali è determinato da una formula che calcola il successivo canale in cui trasmettere, avendo come parametro l'ultimo canale usato e il numero di canali da saltare
+
+\[Ch = (Ch_{-1} + HopIncrement)mod 37\]
+
+Dove:
+\begin{itemize}
+\item[] \emph{Ch}: è il prossimo canale in cui trasmettere.
+\item[] $Ch_{-1}$: è l'ultimo canale in cui si è trasmesso.
+\item[] \emph{HopIncrement} : costante che indica il numero di canali da saltare, che viene scambiato dai dispositivi in fase di connessione.
+\end{itemize}
 
 \subsection{Stack protocollare}
 Storicamente lo stack Bluetooth è diviso in 2 componenti fondamentali: il \emph{Controller} e l'\emph{Host}.
@@ -43,7 +64,10 @@ La parte di Controller è quella che si occupa di eseguire le componenti di bass
 L'\emph{HCI}\footnote{Host Controller Interface}, l'interfaccia tra Host e Controller si occupa di mettere in comunicazione queste due componenti fondamentali, utilizzando canali comunicativi quali UART o USB.
 Se i due componenti sono montati su uno stesso chip, come nel caso dei SoC\footnote{System on a Chip: sistema completamente contenuto su un solo Chip}, allora l'interfaccia HCI è opzionale e può essere omessa.
 
+\begin{figure}[H]
 \includegraphics[scale=0.5]{stack_ble.png}
+\centering
+\end{figure}
 
 \begin{itemize}
 \item Physical Layer (PHY): è il livello fisico, ovvero l'etere; lavora nella banda di frequenza 2,4 GHz ISM\footnote{Industrial, Scientific and Medical: frequenze riservate alle applicazioni di radiocomunicazioni non commerciali, ovvero per uso industriale, scientifico e medico.} Si compone di 40 canali da 2 MHz ognuno suddivisi in 3 per advertising e 37 per lo scambio dati.
@@ -51,7 +75,10 @@ Se i due componenti sono montati su uno stesso chip, come nel caso dei SoC\footn
 \item Link Layer (LL): si occupa della gestione della sequenza e della temporizzazione dei pacchetti scambiati. Dialoga con i nodi vicini e scambia informazioni quali i parametri di connessione e controllo di flusso.\linebreak 
 \'E una macchina a stati che si compone di 5 stati: Standby, Advertising, Scanning, Initiating, Connection. 
 
+\begin{figure}[H]
 \includegraphics[scale=0.5]{LL_states}
+\centering
+\end{figure}
 
 \begin{itemize}
 
@@ -87,8 +114,65 @@ Lo stato di Scanning può essere attivo (richiede informazioni aggiuntive) o pas
 \item GATT server: è un peripheral device, che tramite il protocollo ATT permette al central di conoscere i dati che ha memorizzato in strutture di tipo service-characteristic.
 \item GATT client: è il central device, che gestisce le comunicazioni e che richiede ai server periferici i dati raccolti.
 \end{itemize}
-
 \end{itemize}
+
+\subsection{Formato dei pacchetti}
+
+Il Link Layer (LL) ha un unico formato per tutti i pacchetti scambiati, che quindi è uguale sia per i pacchetti di tipo Advertise, sia per i pacchetti di scambio di dati.
+In figura \ref{pacchetto_LL} è mostrato il formato dei pacchetti
+
+\begin{figure}[H]
+\includegraphics[width=340pt]{pacchetto_LL}
+\centering
+\caption{formato dei pacchetti Link Layer}
+\label{pacchetto_LL}
+\end{figure}
+
+\subsubsection{Preamble}
+Composto da 8 bit, è utile al ricevitore del pacchetto per sincronizzarsi sulla frequenza portante, e per impostare l'\emph{Automatic Gain Control} (AGC).
+I pacchetti di Advertise hanno come preambolo $10101010b$. Per i pacchetti data il valore del preambolo è determinato dal LSB\footnote{Less Significant Bit, il bit meno significativo.} dell'Access Address; se è 1 il preambolo è $01010101b$, se è 0 il preambolo vale $10101010b$
+
+\subsubsection{Access Address}
+Campo composto da 4 Byte; per i pacchetti di Advertise assume un valore costante pari a 0x8E89BED6. Per le trasmissioni di dati l'Access Address deve essere diverso per ogni connessione; dovrebbe essere un valore casuale (con alcune restrizioni) di 32 bit generato dal dispositivo che inizia la connessione ed inviato al secondo dispositivo durante la connessione tramite il pacchetto di Connection Request. 
+
+\subsubsection{PDU}
+Composta da un numero variabile da 2 a 39 byte, è l'acronimo di Protocol Data Unit, ovvero l'unità di informazione scambiata. A seconda che si abbia un pacchetto di Advertise o un pacchetto dati, la PDU assume una struttura differente.
+
+\subsubsection{CRC}
+Alla fine di ogni pacchetto Link Layer c'è un CRC,Il cyclic redundancy check (ovvero controllo a ridondanza ciclica), di 24 bit. Esso serve per rilevare eventuali errori di trasmissione, quindi per sapere se il pacchetto ricevuto è corrotto.
+Il CRC viene calcolato sul campo PDU, partendo dal LSB; il polinomio per il calcolo è:
+\[x^24 + x^10 + x^9 + x^6 + x^4 + x^3 + x + 1\] 
+Se il calcolo del CRC viene fatto su un PDU di tipo Advertise, deve essere inizializzato con il valore 0x555555;
+Se viene fatto su un pacchetto dati, deve essere inizializzato ad un valore scambiato in fase di comunicazione (di 3 Byte), contenuto nella Connection Request.
+In posizione 0 va inserito il bit meno significativo del valore di inizializzazione, ma il CRC viene inviato con il bit più significativo (bit 23) in posizione iniziale.
+
+\subsection{Advertising PDU}
+Il PDU di un pacchetto di Advertise si compone di un header di 16 bit ed un payload con una lunghezza variabile dai 6 ai 37 Byte.
+
+\begin{figure}[H]
+\includegraphics[width=300pt]{Advertising_pdu}
+\centering
+\caption{Advertising PDU}
+\end{figure}
+
+\noindent L'Header di questo PDU si compone di vari campi, come mostrato in figura \ref{Advertising_pdu_header}
+
+\begin{figure}[H]
+\includegraphics[width=300pt]{Advertising_pdu_header}
+\centering
+\caption{Advertising PDU Header}
+\label{Advertising_pdu_header}
+\end{figure}
+
+\begin{itemize}
+\item PDU type (4 bit): 
+\end{itemize}
+
+
+
+
+\subsection{Bit Ordering}
+
 
 
 
