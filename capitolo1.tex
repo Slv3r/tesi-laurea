@@ -164,11 +164,108 @@ Il PDU di un pacchetto di Advertise si compone di un header di 16 bit ed un payl
 \label{Advertising_pdu_header}
 \end{figure}
 
+Il campo PDU type verrà approfondito in seguito, assieme al significato dei campi TxAdd e RxAdd; Il campo length, di 6 bit quindi con un valore massimo di 63, ma settabile dalle specifiche ad un valore massimo di 37, indica i Byte di dimensione del Payload.
+
+
+\subsubsection{PDU type}
+
+\begin{figure}[H]
+\includegraphics[width=200pt]{Advertising_pdu_type}
+\centering
+\caption{Codifiche dei possibili tipi di PDU di un pacchetto di Advertise}
+\end{figure}
+ 
+Campo composto da 4 bit; i vari tipi di PDU si raggruppano in 3 insiemi distinti: Advertising PDU, Scanning PDU e Initiating PDU.
+
+\subsubsection{Advertising PDU}
+
+Questi PDU sono inviati da un dispositivo in stato di Advertise e ricevuti da un sistema in stato di scanning.
+
 \begin{itemize}
-\item PDU type (4 bit): 
+\item ADV\_ IND: evento di advertising che notifica la disponibilità ad una connessione indiretta, ovvero senza specifiche sull'indirizzo da cui ricevere la richiesta di connessione.
+Il payload di questo tipo di PDU è mostrato in figura \ref{adv_ind_payload}, il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico.
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{adv_ind_payload}
+\centering
+\caption{Payload di un PDU di tipo ADV\_ IND }
+\label{adv_ind_payload}
+\end{figure}
+
+Si compone dei campi AdvA di 6 byte, che indica l'indirizzo, pubblico o privato, dell'advertiser, ovvero di chi sta inviando il pacchetto, e il campo AdvData che contiene eventuali informazioni aggiuntive ed ha una lunghezza massima di 31 Byte.
+
+\item ADV\_ DIRECT\_ IND: evento di connessione diretta, in cui nel payload, mostrato in figura \ref{adv_direct_ind_payload} è indicato l'indirizzo da cui ci si aspetta una connessione. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
+il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico. 
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{adv_direct_ind_payload}
+\centering
+\caption{Payload di un PDU di tipo ADV\_ DIRECT\_ IND }
+\label{adv_direct_ind_payload}
+\end{figure}
+
+Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato, ed il campo InitA indica l'indirizzo da cui ci si aspetta la connessione. Il payload di questo tipo non contiene nessuna informazione aggiuntiva.
+
+\item ADV\_ NONCONN\_ IND: evento di non connessione; utilizzato per applicazioni di tipo BEACON, ovvero per condividere informazioni a chiunque è in ascolto. Nel  payload, mostrato in figura \ref{adv_nonconn_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{adv_nonconn_ind_payload}
+\centering
+\caption{Payload di un PDU di tipo ADV\_ NONCONN\_ IND }
+\label{adv_nonconn_ind_payload}
+\end{figure}
+
+Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato, ed il campo AdvData che contiene le informazioni da condividere ed ha una lunghezza massima di 31 Byte.
+
+\item ADV\_ SCAN\_ IND: evento di connessione indiretta in cui si informa che si hanno ulteriori informazioni da condividere; chi è interessato a queste informazioni manderà all'Advertiser un PDU di tipo SCAN\_ REQ, e l'advertiser risponderà con un PDU di tipo SCSN\_ RSP contenente le informazioni aggiuntive. Nel  payload, mostrato in figura \ref{adv_scan_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{adv_scan_ind_payload}
+\centering
+\caption{Payload di un PDU di tipo ADV\_ SCAN\_ IND }
+\label{adv_scan_ind_payload}
+\end{figure}
+
+Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato, ed il campo AdvData che contiene le eventuali informazioni da condividere ed ha una lunghezza massima di 31 Byte.
+
 \end{itemize}
 
+\subsubsection{Scanning PDU}
 
+\begin{itemize}
+
+\item SCAN\_ REQ: dopo aver ricevuto un pacchetto di Advertise, uno scanner in stato attivo può richiedere eventuali informazioni aggiuntive con questo tipo di PDU. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_req_payload} è casuale, se settato a 0 esso è pubblico; il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico.
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{scan_req_payload}
+\centering
+\caption{Payload di un PDU di tipo SCAN\_ REQ }
+\label{scan_req_payload}
+\end{figure}
+
+Nel campo ScanA viene indicato l'indirizzo del device che genera questo pacchetto di SCAN\_ REQ, mentre nel campo AdvA viene indicato l'indirizzo del dispositivo in stato di Advertise a cui è destinato questo pacchetto.
+
+\item SCAN\_ RSP: dopo aver ricevuto un pacchetto di tipo SCAN\_ REQ destinato a lui, l'Advertiser può decidere di adempire alla richiesta inviando questo tipo di PDU con le informazioni aggiuntive che vuole fornire. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_rsp_payload} è casuale, se settato a 0 esso è pubblico;
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{scan_rsp_payload}
+\centering
+\caption{Payload di un PDU di tipo SCAN\_ RSP }
+\label{scan_rsp_payload}
+\end{figure}
+
+Nel campo AdvA viene indicato l'indirizzo del device che genera questo pacchetto di SCAN\_ RSP, mentre nel campo ScanRspData viene inserita l'eventuale informazione aggiuntiva da condividere, con lunghezza massima di 31 Byte.
+
+\end{itemize}
+
+\subsubsection{Initiating PDU}
+
+\begin{itemize}
+\item CONNECTION\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità ad una connessione.
+
+
+
+\end{itemize}
 
 
 \subsection{Bit Ordering}
