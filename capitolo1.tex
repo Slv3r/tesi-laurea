@@ -5,15 +5,19 @@
 Il Bluetooth Low Energy (BLE) è una tecnologia wireless introdotta nello standard 4.0, disegnata e commercializzata dal SIG\footnote{Bluetooth Special Interest Group: organizzazione che regolamenta e definisce gli standard  per la trasmissione dati tramite la tecnologia Bluetooth.}; ideata per trasmissioni di dati di breve dimensione, essa si differenzia dal Bluetooth classico per un inferiore consumo di energia, mantenendo la stessa portata trasmissiva.
 
 \subsection{Banda Trasmissiva}
-BLE opera alla stessa banda di frequenza del bluetooth classico, 2,400 - 2,4835 GHz, ma utilizza un numero inferiore di canali, 40 canali da 2 MHz l'uno.
+BLE opera alla stessa banda di frequenza del bluetooth classico,  2,400 - 2,4835 GHz, ma utilizza un numero inferiore di canali, 40 canali da 2 \si{\mega\hertz} l'uno.
 Nel canale trasmissivo i dati sono trasmessi con una modulazione GFSK.\footnote{Gaussin Frequency Shift Keying, limita la larghezza dello spettro trasmissivo tramite un filtro di tipo Gaussiano.}
-I bitrate trasmissivi sono limitati ai valori 125 kbit/s, 1 Mbit/s o 2 Mbit/s.
+I bitrate trasmissivi sono limitati ai valori ${125\ \si{\kilo\bit/s}}$, ${1\ \si{\mega\bit/s}}$ o ${2\ \si{\mega\bit/s}}$.
 
-\subsubsection{Mapping tra canali e frequenze}
-Il protocollo BLE utilizza 40 canali fisici differenti per la trasmissione, con una numerazione che va da 0 a 39. Ogni canale ha una frequenza centrata in $2402 + (k * 2)$ MHz, dove k assume il valore del canale considerato.
+\subsubsection{Mapping tra canali e frequenze}\label{channels}
+Il protocollo BLE utilizza 40 canali fisici differenti per la trasmissione, con una numerazione che va da 0 a 39. Ogni canale ha una frequenza centrata in ${2402 + (k \cdot 2)\ \si{\mega\hertz}}$, dove k assume il valore del canale considerato.
 Questi 40 canali si dividono in:
 \begin{itemize}
-\item 3 canali 0, 12 e 39 centrati nelle frequenze 2402 MHz, 2426 MHz e 2480 MHz ed utilizzati per l'Advertise. La distribuzione di questi canali non è casuale: essi difatti sono i canali utilizzati da un dispositivo per far conoscere la propria presenza ai vicini, è quindi fondamentale che almeno uno di essi sia disponibile per la trasmissione, quindi privo di disturbi generati da altri sistemi che operano nella stessa banda trasmissiva. Sono stati distribuiti lontani tra di loro cercando di utilizzare tutta la banda disponibile per massimizzare la possibilità di avere un canale libero per la trasmissione. Un altro motivo della scelta è stato quello di poter facilitare la co-esistenza con la tecnologia Wifi, che utilizza la stessa banda per trasmettere, centrata principalmente nei canali Wifi 1, 6 e 11.
+\item 3 canali 0, 12 e 39 centrati nelle frequenze ${2402\ \si{\mega\hertz}}$, ${2426\ \si{\mega\hertz}}$ e ${2480\ \si{\mega\hertz}}$ ed utilizzati per l'Advertise.
+\item i restanti 37 canali sono utilizzati per la trasmissione di dati che vengono utilizzati solo a connessione avvenuta per lo scambio di informazioni.
+\end{itemize} 
+La distribuzione di questi canali non è casuale: essi difatti sono i canali utilizzati da un dispositivo per far conoscere la propria presenza ai vicini, è quindi fondamentale che almeno uno di essi sia disponibile per la trasmissione, quindi privo di disturbi generati da altri sistemi che operano nella stessa banda trasmissiva. Sono stati distribuiti lontani tra di loro cercando di utilizzare tutta la banda disponibile per massimizzare la possibilità di avere un canale libero per la trasmissione. Un altro motivo della scelta è stato quello di poter facilitare la co-esistenza con la tecnologia Wifi, che utilizza la stessa banda per trasmettere, centrata principalmente nei canali Wifi 1, 6 e 11.
+
 
 \begin{figure}[H]
 \includegraphics[width=300pt]{channel_mapping_wifi}
@@ -21,8 +25,7 @@ Questi 40 canali si dividono in:
 \caption{sovrapposizione alla banda BLE dei 3 canali usati principalmente nella comunicazione wifi; si noti come i 3 canali di advertise non rientrino in nessuno di questi 3 canali.}
 \end{figure}
 
-\item i 37 canali restanti sono utilizzati per la trasmissione di dati che vengono utilizzati solo a connessione avvenuta per lo scambio di informazioni.
-\end{itemize} 
+
 
 
 Per una miglior leggibilità ed un più facile utilizzo, si è scelto di mappare i canali reali con dei corrispondenti indici fittizi che vedono nelle numerazioni da 0 a 36 i canali data e 37, 38, 39 per i canali di Advertise;
@@ -45,7 +48,7 @@ Per una miglior leggibilità ed un più facile utilizzo, si è scelto di mappare
 
 
 
-\subsubsection{Adaptive Frequency Hopping}
+\subsubsection{Adaptive Frequency Hopping}\label{freqHopping}
 Bluetooth Low Energy utilizza il \emph{Frequency Hopping}, una tecnica trasmissiva che consiste nel cambiare canale trasmissivo per ogni pacchetto inviato durante una trasmissione; l'utilizzo di questa tecnica permette di ridurre i problemi di interferenza con gli altri canali ed allo stesso tempo di aumentare la sicurezza delle trasmissioni. Esso è definito adattivo perché permette, in fase di connessione, di andare ad escludere determinati canali perché considerati troppo disturbati. L'algoritmo che regola questo cambio di canali è determinato da una formula che calcola il successivo canale in cui trasmettere, avendo come parametro l'ultimo canale usato e il numero di canali da saltare
 
 \[Ch = (Ch_{-1} + HopIncrement)mod 37\]
@@ -132,7 +135,7 @@ In figura \ref{pacchetto_LL} è mostrato il formato dei pacchetti
 Composto da 8 bit, è utile al ricevitore del pacchetto per sincronizzarsi sulla frequenza portante, e per impostare l'\emph{Automatic Gain Control} (AGC).
 I pacchetti di Advertise hanno come preambolo $10101010b$. Per i pacchetti data il valore del preambolo è determinato dal LSB\footnote{Less Significant Bit, il bit meno significativo.} dell'Access Address; se è 1 il preambolo è $01010101b$, se è 0 il preambolo vale $10101010b$
 
-\subsubsection{Access Address}
+\subsubsection{Access Address}\label{access_address}
 Campo composto da 4 Byte; per i pacchetti di Advertise assume un valore costante pari a 0x8E89BED6. Per le trasmissioni di dati l'Access Address deve essere diverso per ogni connessione; dovrebbe essere un valore casuale (con alcune restrizioni) di 32 bit generato dal dispositivo che inizia la connessione ed inviato al secondo dispositivo durante la connessione tramite il pacchetto di Connection Request. 
 
 \subsubsection{PDU}
@@ -258,15 +261,83 @@ Nel campo AdvA viene indicato l'indirizzo del device che genera questo pacchetto
 
 \end{itemize}
 
-\subsubsection{Initiating PDU}
+\subsubsection{Initiating PDU}\label{conn_req}
 
+CONNECTION\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità a connettersi.
+
+\begin{figure}[H]
+\includegraphics[width=150pt]{conn_req_payload}
+\centering
+\caption{Payload di un PDU di tipo CONNECTION\_ REQ }
+\label{conn_req_payload}
+\end{figure}
+
+Il payload è mostrato in figura \ref{conn_req_payload} e si compone di 3 campi principali: 
 \begin{itemize}
-\item CONNECTION\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità ad una connessione.
+\item InitA (6 Byte): l'indirizzo del dispositivo che ha avviato la connessione, ovvero chi ha mandato il pacchetto di CONN\_ REQ;
+\item AdvA (6 Byte): l'indirizzo dell'Advertiser, quello a cui vuole connettersi chi ha iniziato la connessione;
+\item LLData (22 Byte): è il cuore del pacchetto; qui si trovano tutte le informazioni sui parametri da usare durante la connessione.
+\end{itemize}
+
+Una trattazione riservata va fatta al campo LLData, mostrato il figura \ref{lldata} che si compone di 10 campi.
+
+\begin{figure}[H]
+\includegraphics[width=350pt]{lldata}
+\centering
+\caption{Campi di una struttura LLData di un pacchetto PDU di tipo CONNECTION\_ REQ}
+\label{lldata}
+\end{figure}
 
 
+Nel dettaglio i campi sono:
+\begin{itemize}
+\item AA (4 Byte): il campo contiene l'Access Address (specificato nel capitolo \ref{access_address}) utilizzato per tutta la durata della connessione.
+\item CRCInit (3 Byte): contiene il valore a cui inizializzare il calcolo del CRC per la connessione a livello Link Layer. \'E un valore casuale, generato dal dispositivo che avvia la connessione.
+\item WinSize: determina il valore di ${transmitWindowSize = WinSize \cdot 1.25\ ms}$
+\item WinOffset
+\item Interval
+\item Latency indica il numero di volte che ???
+\item Timeout 
+\item ChM (5 byte): indica quali tra i canali destinati allo scambio di informazioni durante una connessione (vedi capitolo \ref{channels}) devono essere usati. Ogni canale è rappresentato da un bit, il cui valore 1 indica che verrà utilizzato, mentre il valore 0 che non lo sarà. I bit 37, 38 e 39, che indicano i canali di Advertise, non sono utilizzati (RFU).
+\item Hop(5 bit): il campo hop indica il valore di HopIncrement (Capitolo \ref{freqHopping}) che verrà utilizzato dall'algoritmo per  determinare di volta in volta il canale su cui trasmettere.
+\item SCA(3 bit): 
 
 \end{itemize}
 
+\subsection{Stato di connessione}
+Il Link Layer entra in uno stato di connessione quando l'initiator invia un pacchetto di tipo CONNECTION\_ REQ (Capitolo \ref{conn_req}); dopo aver ricevuto il pacchetto la connessione viene considerata creata ma non stabilita. Dopo che viene inviato il primo pacchetto dati la connessione si considera stabilita.
+Durante una connessione i due dispositivi assumono due ruoli ben distinti:
+\begin{itemize}
+\item Chi ha inviato il pacchetto di CONNECTION\_ REQ assumerà il ruolo di \emph{Master} in posizione di dispositivo Centrale
+\item L'altro partecipante alla connessione sarà lo \emph{Slave} ed assumerà la posizione di dispositivo periferico.
+\end{itemize}
+Una connessione si compone di più eventi di connessione; Master e Slave possono scambiarsi dati sono all'interno di un evento, il quale deve contenere almeno un pacchetto inviato dal Master. Lo slave deve sempre rispondere quando riceve un pacchetto dal Master, anche nel caso in cui il pacchetto abbia un CRC non valido; se il master non riceve un pacchetto in risposta dallo slave, deve chiudere la connessione. Ulteriormente la connessione può essere chiusa volontariamente sia dallo Slave che dal Master.
+
+
+La temporizzazione di una connessione è scandita da due parametri fondamentali: connection event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
+Il connInterval deve essere un multiplo di 1,25 ms con un valore da 7,5 ms a 4 secondi.
+Il connSlaveLatency indica il numero di eventi di connessione che lo slave può ignorare pur mantenendo attiva la connessione; è un valore intero che va da 0 a 500 ed è calcolato come $((connSupervisionTimeout/connInterval) - 1)$
+\linebreak
+Sia Master che Slave devono avere un contatore a 16 bit (\emph{connEventCounter}), settato a 0 al primo pacchetto inviato durante il primo evento di connessione, inviato dal master; viene incrementato ciclicamente ad ogni evento di connessione.
+
+\subsubsection{Supervision Timeout}
+Una connessione può terminare anche per fattori fisici riguardanti i dispositivi, come ad esempio una distanza troppo elevata, interferenze od una mancanza di potenza. Per determinare tali eventi, sia Master che Slave devono utilizzare un timer chiamato TLLConnSupervision. 
+Se in fase di connessione questo timer raggiunge il valore di $6*connInterval$ prima che la connessione sia stabilita, essa si considera fallita.
+A connessione stabilita, il parametro connection supervisor timeout (\emph{connSupervisionTimeout}) definisce il tempo massimo che deve passare tra la ricezione di due PDU di tipo data successive; Deve essere un multiplo di 10 ms con un valore compreso tra 10 ms e 32 s calcolato come $(1 + connSlaveLatency) * connInterval$.
+Se durante una connessione, il timer raggiunge il valore di connSupervisionTimeout, la connessione deve considerarsi persa.
+
+\subsubsection{Transmit Window}
+In figura \ref{transmit_window} è mostrato un evento di connessione a livello Link Layer, in cui sono visualizzati sia i pacchetti di Advertise con la relativa CONNECTION\_ REQ, sia i primi pacchetti di dati scambiati. Il dispositivo Master può settare l'Anchor Point a suo piacimento, per gestire eventuali altre connessioni a cui partecipa; l'Anchor Point viene settato quando il Master invia il primo pacchetto dati nella transmitWindow. Essa inizia a 1,25 ms + \emph{transmitWindowOffset} dopo aver ricevuto il PDU della CONNECTION\_ REQ; il primo pacchetto non deve essere inviato più tardi di 1.25 ms + transmitWindowOffset + transmitWindowSize.
+
+\begin{figure}[H]
+\includegraphics[width=350pt]{transmit_window}
+\centering
+\caption{Schema di temporizzazione di un evento di connessione. }
+\label{transmit_window}
+\end{figure}
+
+Il parametro \emph{transmitWindowSize} è un multiplo di 1,25 ms e varia da 1,25 ms a meno di 10 ms e meno di (connInterval - 1.25 ms). Il \emph{transmitWindowOffset} è sempre un multiplo di 1,25 e va da 0 a connInterval.
+L'intervallo di tempo tra due pacchetti consecutivi sullo stesso canale, come ad esempio la richiesta del Master e la risposta dello Slave, è chiamato Inter Frame Space; è definito come il tempo trascorso dalla fine dell'invio dell'ultimo bit del primo pacchetto all'inizio dell'invio del primo bit del secondo pacchetto. Abbreviato con l'etichetta T\_ IFS ha un valore di 150 $\mu s$
 
 \subsection{Bit Ordering}
 

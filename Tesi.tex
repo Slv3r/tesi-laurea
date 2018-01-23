@@ -8,7 +8,10 @@
 \usepackage{amssymb} %idem
 \usepackage{graphicx} %facilita la gestione delle figure
 \usepackage{amsfonts}
-\usepackage{float}
+\usepackage{float} %metto le immagini dove voglio
+\usepackage{pdfpages} %per il frontespizio
+\usepackage[bottom]{footmisc} %note correttamente a pie di pagina
+\usepackage[binary-units=true]{siunitx} %unità di misura
 
 \graphicspath{ {images/} } %le immagini sono nella cartella images
 \pagestyle{plain} %lascia vuota la testata e mette il numero di pagina centrato nel piede
@@ -22,7 +25,9 @@
 
 \begin{document}
 
-\maketitle %stampo il titolo
+%\maketitle %stampo il titolo
+
+\includepdf{frontespizio}
 
 \newpage 
 
