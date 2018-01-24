@@ -1,0 +1,13 @@
+%!TEX root = Tesi.tex
+
+\section{Ambiente di sviluppo}
+\subsection{Introduzione}
+\'E stato scelto di sviluppare l'intero progetto di tesi in ambiente UNIX, usando come sistema operativo Linux, nello specifico la distribuzione di Ubuntu 17.04 a 64 bit denominata Zesty Zapus. Questa decisione è stata presa per integrare al meglio i progetti ed il codice già esistente e per creare una base di sviluppo futura che sia Open Source\footnote{Qualità di un sistema che consiste nell'essere di libero uso e riutilizzabile senza alcun costo, per ampliarne funzionalità e caratteristiche} e liberamente utilizzabile senza alcun vincolo di licenza. Non è stata comunque una decisione immediata perché il RedBear Nano2 integra un Soc\footnote{Sistem on a Chip, è un particolare circuito integrato che in un solo chip contiene un sistema completo} progettato dalla società Nordic Semiconductor, chiamato \lq\lq nRF52832\rq\rq, la quale mette a disposizione vari Tool, funzionalità e IDE di sviluppo per questo chip ideati e creati  per funzionare unicamente in ambiente Windows; fortunatamente esistono vari progetti e guide abbastanza dettagliate reperibili online, alcune delle quali supportate direttamente dalla Nordic stessa, che aiutano a settare ed integrare il materiale già esistente anche in ambiente UNIX.
+Rimangono comunque delle forti limitazioni nello sviluppo degli applicativi per Nano2 su Linux, primo fra tutti la mancanza della possibilità di un ambiente di Debug che permetta l'analisi istruzione per istruzione del codice in esecuzione sul dispositivo, con la relativa possibilità di visualizzazione dei valori delle varie variabili durante l'esecuzione; questa limitazione è stata in parte sopperita utilizzando l'interfaccia UART, utilizzandola per inviare stringhe contenenti informazioni su quali parti del codice fossero o meno state realmente eseguite ed il valore di alcune variabili di interesse nelle varie fasi dell'esecuzione dell'applicativo sviluppato. 
+Questa incompatibilità ha rallentato il processo di sviluppo su Linux ma non lo ha reso impossibile, ne tanto meno ne ha limitato le potenzialità.
+
+\subsection{Installazione GNU toolchain}
+
+\subsection{Configurazione SDK}
+
+\subsection{Installazione IDE}

@@ -139,7 +139,7 @@ I pacchetti di Advertise hanno come preambolo $10101010b$. Per i pacchetti data 
 Campo composto da 4 Byte; per i pacchetti di Advertise assume un valore costante pari a 0x8E89BED6. Per le trasmissioni di dati l'Access Address deve essere diverso per ogni connessione; dovrebbe essere un valore casuale (con alcune restrizioni) di 32 bit generato dal dispositivo che inizia la connessione ed inviato al secondo dispositivo durante la connessione tramite il pacchetto di Connection Request. 
 
 \subsubsection{PDU}
-Composta da un numero variabile da 2 a 39 byte, è l'acronimo di Protocol Data Unit, ovvero l'unità di informazione scambiata. A seconda che si abbia un pacchetto di Advertise o un pacchetto dati, la PDU assume una struttura differente.
+Composta da un numero variabile da 2 a 39 byte, è l'acronimo di Protocol Data Unit, ovvero l'unità di informazione scambiata. A seconda che si abbia un pacchetto di Advertise o un pacchetto dati, la PDU assume una struttura differente. I vari tipi di PDU sono trattati nel capitolo \ref{pdus}
 
 \subsubsection{CRC}
 Alla fine di ogni pacchetto Link Layer c'è un CRC,Il cyclic redundancy check (ovvero controllo a ridondanza ciclica), di 24 bit. Esso serve per rilevare eventuali errori di trasmissione, quindi per sapere se il pacchetto ricevuto è corrotto.
@@ -149,7 +149,7 @@ Se il calcolo del CRC viene fatto su un PDU di tipo Advertise, deve essere inizi
 Se viene fatto su un pacchetto dati, deve essere inizializzato ad un valore scambiato in fase di comunicazione (di 3 Byte), contenuto nella Connection Request.
 In posizione 0 va inserito il bit meno significativo del valore di inizializzazione, ma il CRC viene inviato con il bit più significativo (bit 23) in posizione iniziale.
 
-\subsection{Advertising PDU}
+\subsection{PDU dei canali di Advertise}\label{pdus}
 Il PDU di un pacchetto di Advertise si compone di un header di 16 bit ed un payload con una lunghezza variabile dai 6 ai 37 Byte.
 
 \begin{figure}[H]
@@ -178,7 +178,7 @@ Il campo PDU type verrà approfondito in seguito, assieme al significato dei cam
 \caption{Codifiche dei possibili tipi di PDU di un pacchetto di Advertise}
 \end{figure}
  
-Campo composto da 4 bit; i vari tipi di PDU si raggruppano in 3 insiemi distinti: Advertising PDU, Scanning PDU e Initiating PDU.
+I vari tipi di PDU di un canale di Advertise si raggruppano in 3 insiemi distinti: Advertising PDU, Scanning PDU e Initiating PDU.
 
 \subsubsection{Advertising PDU}
 
@@ -189,7 +189,7 @@ Questi PDU sono inviati da un dispositivo in stato di Advertise e ricevuti da un
 Il payload di questo tipo di PDU è mostrato in figura \ref{adv_ind_payload}, il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico.
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{adv_ind_payload}
+\includegraphics[width=140pt]{adv_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ IND }
 \label{adv_ind_payload}
@@ -201,7 +201,7 @@ Si compone dei campi AdvA di 6 byte, che indica l'indirizzo, pubblico o privato,
 il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico. 
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{adv_direct_ind_payload}
+\includegraphics[width=130pt]{adv_direct_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ DIRECT\_ IND }
 \label{adv_direct_ind_payload}
@@ -212,7 +212,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item ADV\_ NONCONN\_ IND: evento di non connessione; utilizzato per applicazioni di tipo BEACON, ovvero per condividere informazioni a chiunque è in ascolto. Nel  payload, mostrato in figura \ref{adv_nonconn_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{adv_nonconn_ind_payload}
+\includegraphics[width=130pt]{adv_nonconn_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ NONCONN\_ IND }
 \label{adv_nonconn_ind_payload}
@@ -223,7 +223,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item ADV\_ SCAN\_ IND: evento di connessione indiretta in cui si informa che si hanno ulteriori informazioni da condividere; chi è interessato a queste informazioni manderà all'Advertiser un PDU di tipo SCAN\_ REQ, e l'advertiser risponderà con un PDU di tipo SCSN\_ RSP contenente le informazioni aggiuntive. Nel  payload, mostrato in figura \ref{adv_scan_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{adv_scan_ind_payload}
+\includegraphics[width=130pt]{adv_scan_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ SCAN\_ IND }
 \label{adv_scan_ind_payload}
@@ -240,7 +240,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item SCAN\_ REQ: dopo aver ricevuto un pacchetto di Advertise, uno scanner in stato attivo può richiedere eventuali informazioni aggiuntive con questo tipo di PDU. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_req_payload} è casuale, se settato a 0 esso è pubblico; il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico.
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{scan_req_payload}
+\includegraphics[width=130pt]{scan_req_payload}
 \centering
 \caption{Payload di un PDU di tipo SCAN\_ REQ }
 \label{scan_req_payload}
@@ -251,7 +251,7 @@ Nel campo ScanA viene indicato l'indirizzo del device che genera questo pacchett
 \item SCAN\_ RSP: dopo aver ricevuto un pacchetto di tipo SCAN\_ REQ destinato a lui, l'Advertiser può decidere di adempire alla richiesta inviando questo tipo di PDU con le informazioni aggiuntive che vuole fornire. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_rsp_payload} è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{scan_rsp_payload}
+\includegraphics[width=130pt]{scan_rsp_payload}
 \centering
 \caption{Payload di un PDU di tipo SCAN\_ RSP }
 \label{scan_rsp_payload}
@@ -263,12 +263,12 @@ Nel campo AdvA viene indicato l'indirizzo del device che genera questo pacchetto
 
 \subsubsection{Initiating PDU}\label{conn_req}
 
-CONNECTION\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità a connettersi.
+CONNECT\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità a connettersi.
 
 \begin{figure}[H]
-\includegraphics[width=150pt]{conn_req_payload}
+\includegraphics[width=170pt]{conn_req_payload}
 \centering
-\caption{Payload di un PDU di tipo CONNECTION\_ REQ }
+\caption{Payload di un PDU di tipo CONNECT\_ REQ }
 \label{conn_req_payload}
 \end{figure}
 
@@ -284,7 +284,7 @@ Una trattazione riservata va fatta al campo LLData, mostrato il figura \ref{llda
 \begin{figure}[H]
 \includegraphics[width=350pt]{lldata}
 \centering
-\caption{Campi di una struttura LLData di un pacchetto PDU di tipo CONNECTION\_ REQ}
+\caption{Campi di una struttura LLData di un pacchetto PDU di tipo CONNECT\_ REQ}
 \label{lldata}
 \end{figure}
 
@@ -293,41 +293,82 @@ Nel dettaglio i campi sono:
 \begin{itemize}
 \item AA (4 Byte): il campo contiene l'Access Address (specificato nel capitolo \ref{access_address}) utilizzato per tutta la durata della connessione.
 \item CRCInit (3 Byte): contiene il valore a cui inizializzare il calcolo del CRC per la connessione a livello Link Layer. \'E un valore casuale, generato dal dispositivo che avvia la connessione.
-\item WinSize: determina il valore di ${transmitWindowSize = WinSize \cdot 1.25\ ms}$
-\item WinOffset
-\item Interval
-\item Latency indica il numero di volte che ???
-\item Timeout 
+\item WinSize: determina il valore di ${transmitWindowSize = WinSize \cdot 1.25\ \si{ms}}$, spiegato in dettaglio nel paragrafo \ref{connState}.
+\item WinOffset: determina il valore di ${transmitWindow\mathit{Offs}et =
+Win\mathit{Offs}et \cdot 1.25\ \si{ms}}$, spiegato in dettaglio nel paragrafo \ref{connState}.
+\item Interval: determina il valore di ${connInterval = Interval \cdot 1.25\ \si{ms}}$, spiegato in dettaglio nel paragrafo \ref{connState}.
+\item Latency: indica il numero di volte che lo slave può non rispondere nella finestra di \emph{connInterval} pur mantenendo valida la connessione (\emph{connSlaveLatency}).
+\item Timeout: determina il valore di ${connSupervisionTimeout = Timeout \cdot 10\ \si{ms}}$, spiegato in dettaglio nel paragrafo \ref{timeout}.
 \item ChM (5 byte): indica quali tra i canali destinati allo scambio di informazioni durante una connessione (vedi capitolo \ref{channels}) devono essere usati. Ogni canale è rappresentato da un bit, il cui valore 1 indica che verrà utilizzato, mentre il valore 0 che non lo sarà. I bit 37, 38 e 39, che indicano i canali di Advertise, non sono utilizzati (RFU).
 \item Hop(5 bit): il campo hop indica il valore di HopIncrement (Capitolo \ref{freqHopping}) che verrà utilizzato dall'algoritmo per  determinare di volta in volta il canale su cui trasmettere.
-\item SCA(3 bit): 
+\item SCA(3 bit): determina l'accuratezza dello \emph{Sleep Clock}.
 
 \end{itemize}
 
-\subsection{Stato di connessione}
-Il Link Layer entra in uno stato di connessione quando l'initiator invia un pacchetto di tipo CONNECTION\_ REQ (Capitolo \ref{conn_req}); dopo aver ricevuto il pacchetto la connessione viene considerata creata ma non stabilita. Dopo che viene inviato il primo pacchetto dati la connessione si considera stabilita.
+\subsection{PDU dei canali Data}
+Il PDU che viene inviato nei canali di scambio dati, ovvero dal canale 0 al canale 36, ha la struttura mostrata in figura \ref{data_pdu} e si compone di un header da 16 bit, payload e un campo MIC (\emph{Message Integrity Check}) opzionale.
+
+\begin{figure}[H]
+\includegraphics[width=350pt]{data_pdu}
+\centering
+\caption{PDU di un pacchetto Data}
+\label{data_pdu}
+\end{figure}
+
+L'header di questo pacchetto ha 5 campi, mostrati in figura \ref{data_pdu_header}, analizzati nel dettaglio di seguito:
+
+\begin{figure}[H]
+\includegraphics[width=350pt]{data_pdu_header}
+\centering
+\caption{Header di un PDU di tipo Data}
+\label{data_pdu_header}
+\end{figure}
+
+\begin{samepage}
+
+\begin{itemize}
+
+\item LLID: da informazioni sul tipo di pacchetto, che può essere di \emph{LL Data} o \emph{LL Control}
+
+\begin{itemize}
+\item 00b: non utilizzato.
+\item 01b: PDU di tipo LL Data, può essere la continuazione di un messaggio L2CAP oppure un PDU vuoto, con campo length posto a 0, usato per il controllo.
+\item 10b: PDU di tipo LL Data, può essere un messaggio L2CAP completo o il suo inizio.
+\item 11b: PDU di tipo LL Control.
+\end{itemize}
+
+\item NESN (1 bit): Next Expected Sequence Number, usato come acknowledge, ovvero per indicare che l'ultimo pacchetto ricevuto è stato ricevuto correttamente.
+\item SN (1 bit): Sequence Number, usato per conoscere se il pacchetto che si sta inviando è un nuovo pacchetto o la ritrasmissione di uno precedente.
+\item MD (1 bit): More Data, indica se il pacchetto è la continuazione di uno precedente o  contiene nuove informazioni.
+\item Length (5 bit): come per l'header di un pacchetto di Advertise, indica la lunghezza del payload ed eventualmente quella del campo MIC se presente; il payload ha una lunghezza massima di 27 Byte, il MIC è fisso a 4 Byte, quindi il campo length varia da 0 a 31 Byte.
+
+\end{itemize}
+\end{samepage}
+
+\subsection{Stato di connessione}\label{connState}
+Il Link Layer entra in uno stato di connessione quando l'initiator invia un pacchetto di tipo CONNECT\_ REQ (Capitolo \ref{conn_req}); dopo aver ricevuto il pacchetto la connessione viene considerata creata ma non stabilita. Dopo che viene inviato il primo pacchetto dati la connessione si considera stabilita.
 Durante una connessione i due dispositivi assumono due ruoli ben distinti:
 \begin{itemize}
-\item Chi ha inviato il pacchetto di CONNECTION\_ REQ assumerà il ruolo di \emph{Master} in posizione di dispositivo Centrale
+\item Chi ha inviato il pacchetto di CONNECT\_ REQ assumerà il ruolo di \emph{Master} in posizione di dispositivo Centrale
 \item L'altro partecipante alla connessione sarà lo \emph{Slave} ed assumerà la posizione di dispositivo periferico.
 \end{itemize}
 Una connessione si compone di più eventi di connessione; Master e Slave possono scambiarsi dati sono all'interno di un evento, il quale deve contenere almeno un pacchetto inviato dal Master. Lo slave deve sempre rispondere quando riceve un pacchetto dal Master, anche nel caso in cui il pacchetto abbia un CRC non valido; se il master non riceve un pacchetto in risposta dallo slave, deve chiudere la connessione. Ulteriormente la connessione può essere chiusa volontariamente sia dallo Slave che dal Master.
 
 
-La temporizzazione di una connessione è scandita da due parametri fondamentali: connection event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
+La temporizzazione di una connessione è scandita da due parametri fondamentali: CONNECT event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
 Il connInterval deve essere un multiplo di 1,25 ms con un valore da 7,5 ms a 4 secondi.
 Il connSlaveLatency indica il numero di eventi di connessione che lo slave può ignorare pur mantenendo attiva la connessione; è un valore intero che va da 0 a 500 ed è calcolato come $((connSupervisionTimeout/connInterval) - 1)$
 \linebreak
 Sia Master che Slave devono avere un contatore a 16 bit (\emph{connEventCounter}), settato a 0 al primo pacchetto inviato durante il primo evento di connessione, inviato dal master; viene incrementato ciclicamente ad ogni evento di connessione.
 
-\subsubsection{Supervision Timeout}
+\subsubsection{Supervision Timeout}\label{timeout}
 Una connessione può terminare anche per fattori fisici riguardanti i dispositivi, come ad esempio una distanza troppo elevata, interferenze od una mancanza di potenza. Per determinare tali eventi, sia Master che Slave devono utilizzare un timer chiamato TLLConnSupervision. 
-Se in fase di connessione questo timer raggiunge il valore di $6*connInterval$ prima che la connessione sia stabilita, essa si considera fallita.
-A connessione stabilita, il parametro connection supervisor timeout (\emph{connSupervisionTimeout}) definisce il tempo massimo che deve passare tra la ricezione di due PDU di tipo data successive; Deve essere un multiplo di 10 ms con un valore compreso tra 10 ms e 32 s calcolato come $(1 + connSlaveLatency) * connInterval$.
+Se in fase di connessione questo timer raggiunge il valore di $6 \cdot connInterval$ prima che la connessione sia stabilita, essa si considera fallita.
+A connessione stabilita, il parametro CONNECT supervisor timeout (\emph{connSupervisionTimeout}) definisce il tempo massimo che deve passare tra la ricezione di due PDU di tipo data successive; Deve essere un multiplo di 10 ms con un valore compreso tra 10 ms e 32 s calcolato come $(1 + connSlaveLatency) \cdot connInterval$.
 Se durante una connessione, il timer raggiunge il valore di connSupervisionTimeout, la connessione deve considerarsi persa.
 
 \subsubsection{Transmit Window}
-In figura \ref{transmit_window} è mostrato un evento di connessione a livello Link Layer, in cui sono visualizzati sia i pacchetti di Advertise con la relativa CONNECTION\_ REQ, sia i primi pacchetti di dati scambiati. Il dispositivo Master può settare l'Anchor Point a suo piacimento, per gestire eventuali altre connessioni a cui partecipa; l'Anchor Point viene settato quando il Master invia il primo pacchetto dati nella transmitWindow. Essa inizia a 1,25 ms + \emph{transmitWindowOffset} dopo aver ricevuto il PDU della CONNECTION\_ REQ; il primo pacchetto non deve essere inviato più tardi di 1.25 ms + transmitWindowOffset + transmitWindowSize.
+In figura \ref{transmit_window} è mostrato un evento di connessione a livello Link Layer, in cui sono visualizzati sia i pacchetti di Advertise con la relativa CONNECT\_ REQ, sia i primi pacchetti di dati scambiati. Il dispositivo Master può settare l'Anchor Point a suo piacimento, per gestire eventuali altre connessioni a cui partecipa; l'Anchor Point viene settato quando il Master invia il primo pacchetto dati nella transmitWindow. Essa inizia a 1,25 ms + \emph{transmitWindowOffset} dopo aver ricevuto il PDU della CONNECT\_ REQ; il primo pacchetto non deve essere inviato più tardi di 1.25 ms + transmitWindowOffset + transmitWindowSize.
 
 \begin{figure}[H]
 \includegraphics[width=350pt]{transmit_window}
@@ -340,7 +381,31 @@ Il parametro \emph{transmitWindowSize} è un multiplo di 1,25 ms e varia da 1,25
 L'intervallo di tempo tra due pacchetti consecutivi sullo stesso canale, come ad esempio la richiesta del Master e la risposta dello Slave, è chiamato Inter Frame Space; è definito come il tempo trascorso dalla fine dell'invio dell'ultimo bit del primo pacchetto all'inizio dell'invio del primo bit del secondo pacchetto. Abbreviato con l'etichetta T\_ IFS ha un valore di 150 $\mu s$
 
 \subsection{Bit Ordering}
+L'ordine dei bit nei campi dei vari pacchetti seguono le specifiche del formato Little Endian, ovvero vengono scritti prima i Byte meno significativi ed in ordine fino ai più significativi. Si applicano inoltre le seguenti regole:
 
+\begin{itemize}
+\item Il bit meno significativo viene indicato con b0
+\item Il bit meno significativo è il primo a essere inviato nell'etere
+\item Nelle varie illustrazioni, l'LSB è mostrato sulla sinistra
+\end{itemize}
+
+Eventuali valori binari in ordine classico, quindi con il bit più significativo a sinistra, saranno indicati con l'appendice \lq b\rq, come ad esempio $01010101b$ che è un possibile valore per il preambolo.
+
+Campi composti da più di un Byte, ad eccezione dei campi CRC e MIC, devono essere trasmessi con il Byte meno significativo prima ed ogni Byte con il proprio bit meno significativo iniziale.
+Per il campo CRC e MIC sono scritti con il byte più significativo a sinistra.
+
+\subsection{Device Address}
+I dispositivi sono unicamente identificati dal Device Address; è un indirizzo composto da 6 Byte e può essere pubblico o casuale.
+L'indirizzo di tipo pubblico, deve essere creato in accordo con lo standard IEEE 802-2001; un indirizzo di questo tipo è così composto:
+\begin{itemize}
+\item company assigned: campo assegnato dal costruttore dell'hardware, compone i 24 bit meno significativi dell'indirizzo.
+\item company id: identifica univocamente il costruttore dell'hardware, compone i 24 bit più significativi dell'indirizzo.
+\end{itemize}
+L'indirizzo di tipo casuale si divide nei 2 campi:
+\begin{itemize}
+\item Hash: occupa i 24 bit meno significativi, è ottenuto come funziona Hash a partire dai 3 Byte più significativi.
+\item Random: generato casualmente, compone i 24 bit più significativi dell'indirizzo.
+\end{itemize}
 
 
 
