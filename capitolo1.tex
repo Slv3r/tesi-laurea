@@ -355,7 +355,7 @@ Durante una connessione i due dispositivi assumono due ruoli ben distinti:
 Una connessione si compone di più eventi di connessione; Master e Slave possono scambiarsi dati sono all'interno di un evento, il quale deve contenere almeno un pacchetto inviato dal Master. Lo slave deve sempre rispondere quando riceve un pacchetto dal Master, anche nel caso in cui il pacchetto abbia un CRC non valido; se il master non riceve un pacchetto in risposta dallo slave, deve chiudere la connessione. Ulteriormente la connessione può essere chiusa volontariamente sia dallo Slave che dal Master.
 
 
-La temporizzazione di una connessione è scandita da due parametri fondamentali: CONNECT event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
+La temporizzazione di una connessione è scandita da due parametri fondamentali: connection event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
 Il connInterval deve essere un multiplo di 1,25 ms con un valore da 7,5 ms a 4 secondi.
 Il connSlaveLatency indica il numero di eventi di connessione che lo slave può ignorare pur mantenendo attiva la connessione; è un valore intero che va da 0 a 500 ed è calcolato come $((connSupervisionTimeout/connInterval) - 1)$
 \linebreak
@@ -364,7 +364,7 @@ Sia Master che Slave devono avere un contatore a 16 bit (\emph{connEventCounter}
 \subsubsection{Supervision Timeout}\label{timeout}
 Una connessione può terminare anche per fattori fisici riguardanti i dispositivi, come ad esempio una distanza troppo elevata, interferenze od una mancanza di potenza. Per determinare tali eventi, sia Master che Slave devono utilizzare un timer chiamato TLLConnSupervision. 
 Se in fase di connessione questo timer raggiunge il valore di $6 \cdot connInterval$ prima che la connessione sia stabilita, essa si considera fallita.
-A connessione stabilita, il parametro CONNECT supervisor timeout (\emph{connSupervisionTimeout}) definisce il tempo massimo che deve passare tra la ricezione di due PDU di tipo data successive; Deve essere un multiplo di 10 ms con un valore compreso tra 10 ms e 32 s calcolato come $(1 + connSlaveLatency) \cdot connInterval$.
+A connessione stabilita, il parametro connection supervisor timeout (\emph{connSupervisionTimeout}) definisce il tempo massimo che deve passare tra la ricezione di due PDU di tipo data successive; Deve essere un multiplo di 10 ms con un valore compreso tra 10 ms e 32 s calcolato come $(1 + connSlaveLatency) \cdot connInterval$.
 Se durante una connessione, il timer raggiunge il valore di connSupervisionTimeout, la connessione deve considerarsi persa.
 
 \subsubsection{Transmit Window}
