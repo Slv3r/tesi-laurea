@@ -106,16 +106,16 @@ File -> Makefile Project with Existing Code
 andando poi a impostare come percorso la cartella che contiene il makefile del progetto; come toolchain bisognerà settare \lq ARM Cross GCC\rq .
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{new_makefile_project}
+\includegraphics[width=300pt]{new_makefile_project}
 \centering
 \caption{Creazione di un nuovo progetto da Makefile}
 \label{makefile_proj}
 \end{figure}
 
-Nella schermata dei progetti di eclipse apparirà il progetto appena creato, vedremo però solo il file Makefile; si deve importare manualmente il file main.c andando prima a creare una nuova cartella virtuale, tramite il percorso New-> Folder e nella schermata selezionare Advanced e successivamente Virtual Folder. Poi tramite tasto destro sulla cartella -> import andare a selezionare il file main.c che è situato nella cartella principale del progetto.
+Nella schermata dei progetti di eclipse apparirà il progetto appena creato, vedremo però solo il file Makefile; si deve importare manualmente il file main.c andando prima a creare una nuova cartella virtuale, tramite il percorso New -\textgreater  Folder e nella schermata selezionare Advanced e successivamente Virtual Folder. Poi tramite tasto destro sulla cartella -\textgreater  import andare a selezionare il file main.c che è situato nella cartella principale del progetto.
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{new_folder_eclipse}
+\includegraphics[width=270pt]{new_folder_eclipse}
 \centering
 \caption{Creazione di una cartella virtuale nel progetto, che conterrà il file main.c}
 \label{makefile_proj}
@@ -127,3 +127,10 @@ L'ultima operazione da compiere prima di poter compilare tramite Eclipse è sett
 make VERBOSE=1
 \end{minted}
 Questo, oltre ad invocare il comando corretto di compilazione, crea un output di tipo \lq verbose\rq dal quale Eclipse ottiene le informazioni sui percorsi dei vari file da cui dipende il main, andando quindi ad eliminare tutti gli errori sintattici che erroneamente l'IDE evidenzia.
+
+\begin{figure}[H]
+\includegraphics[width=350pt]{verbose_eclipse}
+\centering
+\caption{Impostazione del comando di compilazione su Eclipse}
+\end{figure}
+

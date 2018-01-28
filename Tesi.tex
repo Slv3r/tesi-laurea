@@ -14,6 +14,7 @@
 \usepackage[binary-units=true]{siunitx} %unità di misura
 \usepackage{textcomp} %marchio registrato, riservato
 \usepackage{minted} %comandi bash
+\usepackage{eurosym} %simbolo dell'euro
 
 \graphicspath{ {images/} } %le immagini sono nella cartella images
 \pagestyle{plain} %lascia vuota la testata e mette il numero di pagina centrato nel piede
@@ -35,10 +36,15 @@
 
 \tableofcontents %stampo l'indice
 
+\include{introduzione}
 
 \include{capitolo1} 
 
+\include{redbear_nano2}
+
 \include{ambiente_sviluppo}
+
+\include{progettazione_sniffer}
 
 \include{bibliografia}
 
