@@ -380,7 +380,7 @@ In figura \ref{transmit_window} è mostrato un evento di connessione a livello L
 Il parametro \emph{transmitWindowSize} è un multiplo di 1,25 ms e varia da 1,25 ms a meno di 10 ms e meno di (connInterval - 1.25 ms). Il \emph{transmitWindowOffset} è sempre un multiplo di 1,25 e va da 0 a connInterval.
 L'intervallo di tempo tra due pacchetti consecutivi sullo stesso canale, come ad esempio la richiesta del Master e la risposta dello Slave, è chiamato Inter Frame Space; è definito come il tempo trascorso dalla fine dell'invio dell'ultimo bit del primo pacchetto all'inizio dell'invio del primo bit del secondo pacchetto. Abbreviato con l'etichetta T\_ IFS ha un valore di 150 $\mu s$
 
-\subsection{Bit Ordering}
+\subsection{Bit Ordering}\label{endian_bit}
 L'ordine dei bit nei campi dei vari pacchetti seguono le specifiche del formato Little Endian, ovvero vengono scritti prima i Byte meno significativi ed in ordine fino ai più significativi. Si applicano inoltre le seguenti regole:
 
 \begin{itemize}
