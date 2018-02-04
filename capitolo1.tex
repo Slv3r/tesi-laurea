@@ -20,7 +20,7 @@ La distribuzione di questi canali non è casuale: essi difatti sono i canali uti
 
 
 \begin{figure}[H]
-\includegraphics[width=300pt]{channel_mapping_wifi}
+\includegraphics[width=370pt]{channel_mapping_wifi}
 \centering
 \caption{sovrapposizione alla banda BLE dei 3 canali usati principalmente nella comunicazione wifi; si noti come i 3 canali di advertise non rientrino in nessuno di questi 3 canali.}
 \end{figure}
@@ -68,7 +68,7 @@ L'\emph{HCI}\footnote{Host Controller Interface}, l'interfaccia tra Host e Contr
 Se i due componenti sono montati su uno stesso chip, come nel caso dei SoC\footnote{System on a Chip: sistema completamente contenuto su un solo Chip}, allora l'interfaccia HCI è opzionale e può essere omessa.
 
 \begin{figure}[H]
-\includegraphics[scale=0.5]{stack_ble.png}
+\includegraphics[scale=0.6]{stack_ble.png}
 \centering
 \end{figure}
 
@@ -79,7 +79,7 @@ Se i due componenti sono montati su uno stesso chip, come nel caso dei SoC\footn
 \'E una macchina a stati che si compone di 5 stati: Standby, Advertising, Scanning, Initiating, Connection. 
 
 \begin{figure}[H]
-\includegraphics[scale=0.5]{LL_states}
+\includegraphics[scale=0.7]{LL_states}
 \centering
 \end{figure}
 
@@ -125,23 +125,25 @@ Il Link Layer (LL) ha un unico formato per tutti i pacchetti scambiati, che quin
 In figura \ref{pacchetto_LL} è mostrato il formato dei pacchetti
 
 \begin{figure}[H]
-\includegraphics[width=340pt]{pacchetto_LL}
+\includegraphics[width=350pt]{pacchetto_LL}
 \centering
 \caption{formato dei pacchetti Link Layer}
 \label{pacchetto_LL}
 \end{figure}
 
-\subsubsection{Preamble}
-Composto da 8 bit, è utile al ricevitore del pacchetto per sincronizzarsi sulla frequenza portante, e per impostare l'\emph{Automatic Gain Control} (AGC).
+\begin{itemize}
+
+\item \textbf{Preamble}: composto da 8 bit, è utile al ricevitore del pacchetto per sincronizzarsi sulla frequenza portante, e per impostare l'\emph{Automatic Gain Control} (AGC).
 I pacchetti di Advertise hanno come preambolo $10101010b$. Per i pacchetti data il valore del preambolo è determinato dal LSB\footnote{Less Significant Bit, il bit meno significativo.} dell'Access Address; se è 1 il preambolo è $01010101b$, se è 0 il preambolo vale $10101010b$
 
-\subsubsection{Access Address}\label{access_address}
+
+\item \textbf{Access Address}: \label{access_address}
 Campo composto da 4 Byte; per i pacchetti di Advertise assume un valore costante pari a 0x8E89BED6. Per le trasmissioni di dati l'Access Address deve essere diverso per ogni connessione; dovrebbe essere un valore casuale (con alcune restrizioni) di 32 bit generato dal dispositivo che inizia la connessione ed inviato al secondo dispositivo durante la connessione tramite il pacchetto di Connection Request. 
 
-\subsubsection{PDU}
+\item \textbf{PDU}:
 Composta da un numero variabile da 2 a 39 byte, è l'acronimo di Protocol Data Unit, ovvero l'unità di informazione scambiata. A seconda che si abbia un pacchetto di Advertise o un pacchetto dati, la PDU assume una struttura differente. I vari tipi di PDU sono trattati nel capitolo \ref{pdus}
 
-\subsubsection{CRC}
+\item \textbf{CRC}:
 Alla fine di ogni pacchetto Link Layer c'è un CRC,Il cyclic redundancy check (ovvero controllo a ridondanza ciclica), di 24 bit. Esso serve per rilevare eventuali errori di trasmissione, quindi per sapere se il pacchetto ricevuto è corrotto.
 Il CRC viene calcolato sul campo PDU, partendo dal LSB; il polinomio per il calcolo è:
 \[x^24 + x^10 + x^9 + x^6 + x^4 + x^3 + x + 1\] 
@@ -149,11 +151,15 @@ Se il calcolo del CRC viene fatto su un PDU di tipo Advertise, deve essere inizi
 Se viene fatto su un pacchetto dati, deve essere inizializzato ad un valore scambiato in fase di comunicazione (di 3 Byte), contenuto nella Connection Request.
 In posizione 0 va inserito il bit meno significativo del valore di inizializzazione, ma il CRC viene inviato con il bit più significativo (bit 23) in posizione iniziale.
 
+\end{itemize}
+
+
+
 \subsection{PDU dei canali di Advertise}\label{pdus}
 Il PDU di un pacchetto di Advertise si compone di un header di 16 bit ed un payload con una lunghezza variabile dai 6 ai 37 Byte.
 
 \begin{figure}[H]
-\includegraphics[width=300pt]{Advertising_pdu}
+\includegraphics[width=315pt]{Advertising_pdu}
 \centering
 \caption{Advertising PDU}
 \end{figure}
@@ -161,7 +167,7 @@ Il PDU di un pacchetto di Advertise si compone di un header di 16 bit ed un payl
 \noindent L'Header di questo PDU si compone di vari campi, come mostrato in figura \ref{Advertising_pdu_header}
 
 \begin{figure}[H]
-\includegraphics[width=300pt]{Advertising_pdu_header}
+\includegraphics[width=350pt]{Advertising_pdu_header}
 \centering
 \caption{Advertising PDU Header}
 \label{Advertising_pdu_header}
@@ -173,7 +179,7 @@ Il campo PDU type verrà approfondito in seguito, assieme al significato dei cam
 \subsubsection{PDU type}
 
 \begin{figure}[H]
-\includegraphics[width=200pt]{advertising_pdu_type}
+\includegraphics[width=220pt]{advertising_pdu_type}
 \centering
 \caption{Codifiche dei possibili tipi di PDU di un pacchetto di Advertise}
 \end{figure}
@@ -189,7 +195,7 @@ Questi PDU sono inviati da un dispositivo in stato di Advertise e ricevuti da un
 Il payload di questo tipo di PDU è mostrato in figura \ref{adv_ind_payload}, il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico.
 
 \begin{figure}[H]
-\includegraphics[width=140pt]{adv_ind_payload}
+\includegraphics[width=185pt]{adv_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ IND }
 \label{adv_ind_payload}
@@ -201,7 +207,7 @@ Si compone dei campi AdvA di 6 byte, che indica l'indirizzo, pubblico o privato,
 il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico. 
 
 \begin{figure}[H]
-\includegraphics[width=130pt]{adv_direct_ind_payload}
+\includegraphics[width=170pt]{adv_direct_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ DIRECT\_ IND }
 \label{adv_direct_ind_payload}
@@ -212,7 +218,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item ADV\_ NONCONN\_ IND: evento di non connessione; utilizzato per applicazioni di tipo BEACON, ovvero per condividere informazioni a chiunque è in ascolto. Nel  payload, mostrato in figura \ref{adv_nonconn_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=130pt]{adv_nonconn_ind_payload}
+\includegraphics[width=170pt]{adv_nonconn_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ NONCONN\_ IND }
 \label{adv_nonconn_ind_payload}
@@ -223,7 +229,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item ADV\_ SCAN\_ IND: evento di connessione indiretta in cui si informa che si hanno ulteriori informazioni da condividere; chi è interessato a queste informazioni manderà all'Advertiser un PDU di tipo SCAN\_ REQ, e l'advertiser risponderà con un PDU di tipo SCSN\_ RSP contenente le informazioni aggiuntive. Nel  payload, mostrato in figura \ref{adv_scan_ind_payload} è indicato l'indirizzo dell'Advertiser. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=130pt]{adv_scan_ind_payload}
+\includegraphics[width=170pt]{adv_scan_ind_payload}
 \centering
 \caption{Payload di un PDU di tipo ADV\_ SCAN\_ IND }
 \label{adv_scan_ind_payload}
@@ -240,7 +246,7 @@ Il campo AdvA contiene l'indirizzo dell'Advertiser, sia esso pubblico o privato,
 \item SCAN\_ REQ: dopo aver ricevuto un pacchetto di Advertise, uno scanner in stato attivo può richiedere eventuali informazioni aggiuntive con questo tipo di PDU. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_req_payload} è casuale, se settato a 0 esso è pubblico; il campo RxAdd dell'header se settato a 1 indica che l'indirizzo del campo InitA del payload è casuale, se settato a 0 esso è pubblico.
 
 \begin{figure}[H]
-\includegraphics[width=130pt]{scan_req_payload}
+\includegraphics[width=170pt]{scan_req_payload}
 \centering
 \caption{Payload di un PDU di tipo SCAN\_ REQ }
 \label{scan_req_payload}
@@ -251,7 +257,7 @@ Nel campo ScanA viene indicato l'indirizzo del device che genera questo pacchett
 \item SCAN\_ RSP: dopo aver ricevuto un pacchetto di tipo SCAN\_ REQ destinato a lui, l'Advertiser può decidere di adempire alla richiesta inviando questo tipo di PDU con le informazioni aggiuntive che vuole fornire. Il campo TxAdd dell'header se settato a 1 indica che l'indirizzo del campo AdvA del payload, figura \ref{scan_rsp_payload} è casuale, se settato a 0 esso è pubblico;
 
 \begin{figure}[H]
-\includegraphics[width=130pt]{scan_rsp_payload}
+\includegraphics[width=155pt]{scan_rsp_payload}
 \centering
 \caption{Payload di un PDU di tipo SCAN\_ RSP }
 \label{scan_rsp_payload}
@@ -266,7 +272,7 @@ Nel campo AdvA viene indicato l'indirizzo del device che genera questo pacchetto
 CONNECT\_ REQ: inviata da un dispositivo in stato di scanning, consente a quest'ultimo di effettuare una connessione con il dispositivo in stato di Advertising che ha dichiarato la sua disponibilità a connettersi.
 
 \begin{figure}[H]
-\includegraphics[width=170pt]{conn_req_payload}
+\includegraphics[width=230pt]{conn_req_payload}
 \centering
 \caption{Payload di un PDU di tipo CONNECT\_ REQ }
 \label{conn_req_payload}
@@ -282,7 +288,7 @@ Il payload è mostrato in figura \ref{conn_req_payload} e si compone di 3 campi 
 Una trattazione riservata va fatta al campo LLData, mostrato il figura \ref{lldata} che si compone di 10 campi.
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{lldata}
+\includegraphics[width=400pt]{lldata}
 \centering
 \caption{Campi di una struttura LLData di un pacchetto PDU di tipo CONNECT\_ REQ}
 \label{lldata}
@@ -318,7 +324,7 @@ Il PDU che viene inviato nei canali di scambio dati, ovvero dal canale 0 al cana
 L'header di questo pacchetto ha 5 campi, mostrati in figura \ref{data_pdu_header}, analizzati nel dettaglio di seguito:
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{data_pdu_header}
+\includegraphics[width=370pt]{data_pdu_header}
 \centering
 \caption{Header di un PDU di tipo Data}
 \label{data_pdu_header}
@@ -371,7 +377,7 @@ Se durante una connessione, il timer raggiunge il valore di connSupervisionTimeo
 In figura \ref{transmit_window} è mostrato un evento di connessione a livello Link Layer, in cui sono visualizzati sia i pacchetti di Advertise con la relativa CONNECT\_ REQ, sia i primi pacchetti di dati scambiati. Il dispositivo Master può settare l'Anchor Point a suo piacimento, per gestire eventuali altre connessioni a cui partecipa; l'Anchor Point viene settato quando il Master invia il primo pacchetto dati nella transmitWindow. Essa inizia a 1,25 ms + \emph{transmitWindowOffset} dopo aver ricevuto il PDU della CONNECT\_ REQ; il primo pacchetto non deve essere inviato più tardi di 1.25 ms + transmitWindowOffset + transmitWindowSize.
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{transmit_window}
+\includegraphics[width=400pt]{transmit_window}
 \centering
 \caption{Schema di temporizzazione di un evento di connessione. }
 \label{transmit_window}

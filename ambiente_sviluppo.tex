@@ -16,7 +16,7 @@ Quello che ci serve è un compilatore chiamato \emph{GNU toolchain for ARM Corte
 
 Per compiere questa operazione in Ubuntu, basterà aprire una finestra del terminare BASH ed eseguire il comando:
 
-\begin{minted}[breaklines]{bash}
+\begin{minted}[breaklines]{text}
 echo 'export PATH=\$PATH:<directory estratta>/gcc-arm-none-eabi-6-2017-q2-update/bin' >> ~/.profile 
 \end{minted}
 
@@ -47,7 +47,7 @@ dove \textless SDK\textgreater  è la root dell'SDK estratto.
 Aprendo il file con un semplice editor di testo, cambiare i 3 campi riportati come segue:
 
 \begin{minted}{text}
-GNU_INSTALL_ROOT := <directory estratta>/gcc-arm-none-eabi-6-2017-q2-update/bin/
+GNU_INSTALL_ROOT := .../gcc-arm-none-eabi-6-2017-q2-update/bin/
 GNU_VERSION := 6.3.1
 GNU_PREFIX := arm-none-eabi
 \end{minted}
@@ -61,7 +61,7 @@ Il dispositivo della società RedBear chiamato Nano2 che viene utilizzato in que
 \'E stato scelto di prendere la board di sviluppo PCA10040 ed il relativo file di configurazione pca10040 e adattarne la piedinatura con quella dichiarata dalla Redbear, mostrata in figura \ref{nano2_pins}
 
 \begin{figure}[H]
-\includegraphics[width=350pt]{nano2_pins}
+\includegraphics[width=400pt]{nano2_pins}
 \centering
 \caption{Piedinatura del modulo Nano2}
 \label{nano2_pins}
