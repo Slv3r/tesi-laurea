@@ -363,8 +363,9 @@ Una connessione si compone di più eventi di connessione; Master e Slave possono
 
 La temporizzazione di una connessione è scandita da due parametri fondamentali: connection event interval (\emph{connInterval}) e slave latency (\emph{connSlaveLatency}. L'instante dell'inizio di un evento di connessione è chiamato anchor point; in questo istante il master deve cominciare a trasmettere un pacchetto.
 Il connInterval deve essere un multiplo di 1,25 ms con un valore da 7,5 ms a 4 secondi.
-Il connSlaveLatency indica il numero di eventi di connessione che lo slave può ignorare pur mantenendo attiva la connessione; è un valore intero che va da 0 a 500 ed è calcolato come $((connSupervisionTimeout/connInterval) - 1)$
-\linebreak
+Il connSlaveLatency indica il numero di eventi di connessione che lo slave può ignorare pur mantenendo attiva la connessione; è un valore intero che va da 0 a 500 ed è calcolato come \emph{((connSupervisionTimeout/connInterval) - 1)}
+
+
 Sia Master che Slave devono avere un contatore a 16 bit (\emph{connEventCounter}), settato a 0 al primo pacchetto inviato durante il primo evento di connessione, inviato dal master; viene incrementato ciclicamente ad ogni evento di connessione.
 
 \subsubsection{Supervision Timeout}\label{timeout}

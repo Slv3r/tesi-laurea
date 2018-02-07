@@ -6,3 +6,6 @@
 !*.png
 !*.gif
 !/images
+!/Presentazione
+!*.pptx
+!discorso.docx
